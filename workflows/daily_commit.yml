@@ -4,7 +4,7 @@ on:
   schedule:
     # Runs daily at 17:15 UTC → 10:45 PM IST
     - cron: '15 17 * * *'
-  workflow_dispatch:        # allows manual run for testing
+  workflow_dispatch:
 
 jobs:
   daily-commit:
@@ -16,8 +16,8 @@ jobs:
       - name: Commit daily update - 25ds1000098@ds.study.iitm.ac.in
         run: |
           FILE=daily_update.txt
-          # Overwrite the file with current timestamp to guarantee a commit
-          echo "$(date)" > $FILE
+          # Always guarantee a new change by adding timestamp in seconds
+          echo "Daily update $(date) $(date +%s)" > $FILE
           git config --global user.name "GitHub Actions"
           git config --global user.email "25ds1000098@ds.study.iitm.ac.in"
           git add $FILE
