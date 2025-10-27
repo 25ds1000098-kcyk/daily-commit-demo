@@ -1,18 +1,23 @@
-name: Daily Auto Commit
+name: Daily Auto Commit with 5-Minute Delay
 
 on:
   schedule:
     # Runs daily at 17:15 UTC (10:45 PM IST). 
-    # Adjusted to a specific time as required.
     - cron: '15 17 * * *'
   workflow_dispatch:  # Allows for manual testing and triggering
 
 jobs:
-  daily-update:
+  delayed-daily-commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # Add a step to delay the subsequent commit action
+      - name: Wait for 5 minutes before committing
+        run: |
+          echo "Waiting 5 minutes to meet the requirement."
+          sleep 300  # Sleeps for 300 seconds (5 minutes)
 
       - name: Create and Commit daily update - 25ds1000098@ds.study.iitm.ac.in
         run: |
@@ -21,7 +26,7 @@ jobs:
           TIMESTAMP=$(date +'%Y-%m-%dT%H:%M:%SZ')
           
           # 2. Create/update the file with a unique timestamp to force a commit
-          echo "Scheduled update at: $TIMESTAMP" >> $FILE
+          echo "Scheduled update committed after 5-min delay at: $TIMESTAMP" >> $FILE
 
           # 3. Configure Git user details
           git config --global user.name "GitHub Actions Bot"
@@ -32,8 +37,8 @@ jobs:
           
           # Check if there are any changes to commit (important for 'schedule')
           if git diff --staged --quiet; then
-            echo "No changes detected. Skipping commit."
+            echo "No new changes detected. Skipping commit."
           else
-            git commit -m "Daily commit: $TIMESTAMP"
+            git commit -m "Daily commit (Delayed): $TIMESTAMP"
             git push
           fi
