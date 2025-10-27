@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: write # <--- THIS IS THE CRITICAL LINE
     steps:
-      - name: Checkout repository
+      - name: Commit daily update - 25ds1000098@ds.study.iitm.ac.in
         uses: actions/checkout@v4
 
       # Add a step to delay the subsequent commit action
