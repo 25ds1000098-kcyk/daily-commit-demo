@@ -9,6 +9,8 @@ on:
 jobs:
   delayed-daily-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # <--- THIS IS THE CRITICAL LINE
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
