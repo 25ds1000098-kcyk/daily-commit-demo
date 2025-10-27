@@ -2,24 +2,38 @@ name: Daily Commit
 
 on:
   schedule:
-    # 17:15 UTC = 10:45 PM IST
+    # Runs daily at 17:15 UTC (10:45 PM IST). 
+    # Adjusted to a specific time as required.
     - cron: '15 17 * * *'
-  workflow_dispatch:        # allows manual testing
+  workflow_dispatch:  # Allows for manual testing and triggering
 
 jobs:
-  daily-commit:
+  daily-update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Commit daily update - 25ds1000098@ds.study.iitm.ac.in
+      - name: Create and Commit daily update - 25ds1000098@ds.study.iitm.ac.in
         run: |
-          FILE=daily_update.txt
-          # Always guarantee a new change by including timestamp in seconds
-          echo "Daily update $(date) $(date +%s)" > $FILE
-          git config --global user.name "GitHub Actions"
+          # 1. Define file and get unique timestamp
+          FILE="daily_update.txt"
+          TIMESTAMP=$(date +'%Y-%m-%dT%H:%M:%SZ')
+          
+          # 2. Create/update the file with a unique timestamp to force a commit
+          echo "Scheduled update at: $TIMESTAMP" >> $FILE
+
+          # 3. Configure Git user details
+          git config --global user.name "GitHub Actions Bot"
           git config --global user.email "25ds1000098@ds.study.iitm.ac.in"
+          
+          # 4. Add, Commit, and Push
           git add $FILE
-          git commit -m "Daily update $(date)"
-          git push
+          
+          # Check if there are any changes to commit (important for 'schedule')
+          if git diff --staged --quiet; then
+            echo "No changes detected. Skipping commit."
+          else
+            git commit -m "Daily commit: $TIMESTAMP"
+            git push
+          fi
