@@ -19,7 +19,7 @@ jobs:
       - name: Wait for 5 minutes before committing
         run: |
           echo "Waiting 5 minutes to meet the requirement."
-          sleep 300  # Sleeps for 300 seconds (5 minutes)
+          sleep 10  # Sleeps for 300 seconds (5 minutes)
 
       - name: Create and Commit daily update - 25ds1000098@ds.study.iitm.ac.in
         run: |
