@@ -1,25 +1,25 @@
 name: Daily Commit
 
-# Run daily at 10:30 UTC (adjust hours/minutes as needed)
 on:
   schedule:
-    - cron: '30 10 * * *'   # daily at 10:30 UTC
-  workflow_dispatch:        # allows manual trigger
+    # 17:15 UTC = 10:45 PM IST
+    - cron: '15 17 * * *'
+  workflow_dispatch:        # allows manual testing
 
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Commit something
       - name: Commit daily update - 25ds1000098@ds.study.iitm.ac.in
         run: |
-          echo "Daily update $(date)" >> daily_update.txt
+          FILE=daily_update.txt
+          # Always guarantee a new change by including timestamp in seconds
+          echo "Daily update $(date) $(date +%s)" > $FILE
           git config --global user.name "GitHub Actions"
           git config --global user.email "25ds1000098@ds.study.iitm.ac.in"
-          git add daily_update.txt
-          git commit -m "Daily update $(date)" || echo "No changes to commit"
+          git add $FILE
+          git commit -m "Daily update $(date)"
           git push
